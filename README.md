@@ -21,7 +21,7 @@ services:
 	authenticator:
 		class: VojtechDobes\MultiAuthenticator
 		setup:
-			- addAuthenticator( db, DatabaseAuthenticator )
+			- addAuthenticator( db, DatabaseAuthenticator( ) )
 			- addAuthenticator( twitter, TwitterAuthenticator( ) )
 			- addAuthenticator( facebook, FacebookAuthenticator( ) )
 ```
