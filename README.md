@@ -13,23 +13,46 @@ Nette 2.0.0
 ## Installation
 
 1. Get the source code from Github or via Composer (`vojtech-dobes/nette-multi-authenticator`).
-2. Register `VojtechDobes\MultiAuthenticator` as service in your configuration.
+2. Register `VojtechDobes\MultiAuthenticatorExtension` as extension of `$configurator`.
 
+```php
+$configurator->onCompile[] = function ($configurator, $compiler) {
+	$compiler->addExtension('authentication', new VojtechDobes\MultiAuthenticatorExtension);
+};
+```
 
 ```neon
-services:
-	authenticator:
-		class: VojtechDobes\MultiAuthenticator
-		setup:
-			- addAuthenticator( db, DatabaseAuthenticator( ) )
-			- addAuthenticator( twitter, TwitterAuthenticator( ) )
-			- addAuthenticator( facebook, FacebookAuthenticator( ) )
+authentication:
+	db: DatabaseAuthenticator( @dibi )
+	twitter: TwitterAuthenticator( )
+	facebook: @facebookAuthenticator
+```
+
+In extension's section of config file, all you have to do is listing of possible authentication methods with corresponding implementation. You can use these formats:
+
+- `@service`
+- `ClassName( arguments, ... )`
+
+You can also register plain callbacks as authentication methods as well - for example in `app/bootstrap.php`.
+
+```php
+$container->authenticator->addAuthenticator('debug', function ($username, $password) {
+	if ($username === 'test' && $password === ***) {
+		return new Nette\Security\Identity('debug');
+	}
+});
 ```
 
 ## Usage
 
+For authentication, you use `$user` as always, with the only difference: you have to pass authentication method's name as first argument:
+
 ```php
-$user->login('database', 'marek', ***);
+$user->login('db', 'marek', ***);
 ```
 
-All you have to do is to register all necessary authenticators in config via `setup` field. `addAuthenticator` method accepts two arguments: first is identificator of authentication method, second is the instance. It can be also plain callback (when registering for example in `bootstrap.php`);
+```php
+$user->login('debug', 'test', ***);
+```
+
+Etc.
