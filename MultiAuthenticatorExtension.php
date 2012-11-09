@@ -29,7 +29,7 @@ class MultiAuthenticatorExtension extends CompilerExtension
 			if ($implementation instanceof \stdClass) {
 				$implementation = new DI\Statement(
 					$implementation->value,
-					$implementation->args ?: array()
+					$implementation->attributes
 				);
 			}
 			$authenticator->addSetup('addAuthenticator', array(
