@@ -26,15 +26,14 @@ class MultiAuthenticatorExtension extends CompilerExtension
 			->setClass('VojtechDobes\MultiAuthenticator');
 
 		foreach ($this->getConfig($this->defaults) as $method => $implementation) {
-			if ($implementation instanceof \stdClass) {
-				$implementation = new DI\Statement(
-					$implementation->value,
-					$implementation->attributes
-				);
-			}
+			$this->compiler->parseServices($this->containerBuilder, array(
+				'services' => array(
+					$this->prefix($method) => $implementation,
+				),
+			));
 			$authenticator->addSetup('addAuthenticator', array(
 				$method,
-				$implementation,
+				$this->prefix('@' . $method),
 			));
 		}
 	}
