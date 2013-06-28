@@ -3,7 +3,7 @@
 namespace VojtechDobes;
 
 use Nette;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 use Nette\DI;
 
 
