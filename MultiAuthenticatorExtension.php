@@ -3,14 +3,17 @@
 namespace VojtechDobes;
 
 use Nette;
-use Nette\Config\CompilerExtension;
 use Nette\DI;
+
+if (!class_exists('Nette\DI\CompilerExtension')) {
+	class_alias('Nette\Config\CompilerExtension', 'Nette\DI\CompilerExtension');
+}
 
 
 /**
  * @author Vojtěch Dobeš
  */
-class MultiAuthenticatorExtension extends CompilerExtension
+class MultiAuthenticatorExtension extends Nette\DI\CompilerExtension
 {
 
 	/** @var array */
