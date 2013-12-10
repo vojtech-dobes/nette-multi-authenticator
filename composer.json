@@ -15,6 +15,6 @@
         "nette/nette": "~2.0"
     },
     "autoload": {
-        "classmap": ["/"]
+        "classmap": ["."]
     }
 }
