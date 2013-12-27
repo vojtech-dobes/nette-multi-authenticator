@@ -34,6 +34,8 @@ class MultiAuthenticatorExtension extends Nette\DI\CompilerExtension
 					$this->prefix($method) => $implementation,
 				),
 			));
+			$container->getDefinition($this->prefix($method))
+				->setAutowired(FALSE);
 			$authenticator->addSetup('addAuthenticator', array(
 				$method,
 				$this->prefix('@' . $method),
