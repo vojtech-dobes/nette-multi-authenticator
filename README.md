@@ -13,20 +13,20 @@ Nette 2.0 or newer
 ## Installation
 
 1. Get the source code from Github or via Composer (`vojtech-dobes/nette-multi-authenticator`).
-2. Register `VojtechDobes\MultiAuthenticatorExtension` as DI extension.
-    1. In Nette 2.0, in your bootstrap:
-    ```php
-    $configurator->onCompile[] = function ($configurator, $compiler) {
-        $compiler->addExtension('authentication', new VojtechDobes\MultiAuthenticatorExtension);
-    };
-    ```
+2. Register addon in section `extensions` of your config file:
 
-    2. In Nette 2,1, in your configuration file in `extensions` section:
-    ```neon
-    authentication: VojtechDobes\MultiAuthenticatorExtension
-    ```
+```neon
+authentication: VojtechDobes\MultiAuthenticatorExtension
+```
 
-Then you should register your authenticators:
+> In Nette 2.0, registration is done in `app/bootstrap.php`:
+```php
+$configurator->onCompile[] = function ($configurator, $compiler) {
+    $compiler->addExtension('authentication', new VojtechDobes\MultiAuthenticatorExtension);
+};
+```
+
+Then you should register your authenticators in corresponding config section:
 
 ```neon
 authentication:
