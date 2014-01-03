@@ -17,7 +17,7 @@ Nette 2.0 or newer
     1. In Nette 2.0, in your bootstrap:
     ```php
     $configurator->onCompile[] = function ($configurator, $compiler) {
-    	$compiler->addExtension('authentication', new VojtechDobes\MultiAuthenticatorExtension);
+        $compiler->addExtension('authentication', new VojtechDobes\MultiAuthenticatorExtension);
     };
     ```
 
