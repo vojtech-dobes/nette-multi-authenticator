@@ -4,7 +4,7 @@ Allows definition of multiple authentication ways with unified API (for Nette Fr
 
 ##### License
 
-New BSD
+[New BSD](http://choosealicense.com/licenses/bsd-3-clause/)
 
 ##### Dependencies
 
