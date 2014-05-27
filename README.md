@@ -12,54 +12,65 @@ Nette 2.0 or newer
 
 ## Installation
 
-1. Get the source code from Github or via Composer (`vojtech-dobes/nette-multi-authenticator`).
-2. Register addon in section `extensions` of your config file:
-
-```neon
-authentication: VojtechDobes\MultiAuthenticatorExtension
-```
-
-> In Nette 2.0, registration is done in `app/bootstrap.php`:
-```php
-$configurator->onCompile[] = function ($configurator, $compiler) {
-    $compiler->addExtension('authentication', new VojtechDobes\MultiAuthenticatorExtension);
-};
-```
-
-Then you should register your authenticators in corresponding config section:
-
-```neon
-authentication:
-	db: DatabaseAuthenticator( @dibi )
-	twitter: TwitterAuthenticator( )
-	facebook: @facebookAuthenticator
-```
-
-In extension's section of config file, all you have to do is listing of possible authentication methods with corresponding implementation. You can use these formats:
-
-- `@service`
-- `ClassName( arguments, ... )`
-
-You can also register plain callbacks as authentication methods as well - for example in `app/bootstrap.php`.
-
-```php
-$container->authenticator->addAuthenticator('debug', function ($username, $password) {
-	if ($username === 'test' && $password === ***) {
-		return new Nette\Security\Identity('debug');
-	}
-});
-```
+None, really :).
 
 ## Usage
 
-For authentication, you use `$user` as always, with the only difference: you have to pass authentication method's name as first argument:
+Write your authenticators, but don't make them implement `Nette\Security\IAuthenticator`. On the other hand, request `Nette\Security\User` service as dependency.
 
 ```php
-$user->login('db', 'marek', ***);
+class CredentialsAuthenticator
+{
+
+    /** @var Nette\Security\User */
+    private $user;
+    
+    public function __construct(Nette\Security\User $user)
+    {
+        $this->user = $user;
+    }
+
+}
 ```
+
+Now write your login method. Be creative!
 
 ```php
-$user->login('debug', 'test', ***);
+public function login($username, $password)
+{
+    // ... your logic
+    
+    $this->user->login(new Identity( ... ));
+}
 ```
 
-Etc.
+Register your authenticator as service:
+
+```neon
+services:
+    - CredentialsAuthenticator
+```
+
+And you're done.
+
+For authentication, you should use the specific authenticator:
+
+```php
+class SignPresenter extends Nette\Application\UI\Presenter
+{
+
+    /** @var CredentialsAuthenticator @inject */
+    public $credentialsAuthenticator;
+
+    // ...
+    
+    public function processLoginForm($form)
+    {
+        $values = $form->getValues();
+        $this->credentialsAuthenticator->login($values->username, $values->password);
+    }
+
+}
+```
+
+The point is: use normal dependencies and wrap `Nette\Security\User` in them, not the other way around.
